@@ -1,0 +1,30 @@
+
+> frontend@0.1.0 build
+> next build
+
+ΓÜá Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\rakes\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\rakes\Desktop\Hackathon\frontend\package-lock.json
+
+Γû▓ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 9.6s
+  Running TypeScript ...
+Failed to compile.
+
+./src/app/form/[id]/page.tsx:431:34
+Type error: This comparison appears to be unintentional because the types '"number" | "text" | "select" | "textarea" | "date" | "email" | "phone" | "checkbox" | "multiselect"' and '"radio"' have no overlap.
+
+  429 |
+  430 |                                 {/* Radio */}
+> 431 |                                 {field.type === 'radio' && (
+      |                                  ^
+  432 |                                     <FormControl component="fieldset">
+  433 |                                         <Typography sx={labelSx}>
+  434 |                                             {field.label}{field.required && <Box component="span" sx={{ color: '#FF6B6B', ml: 0.3 }}>*</Box>}
+Next.js build worker exited with code: 1 and signal: null
