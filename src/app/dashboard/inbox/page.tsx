@@ -445,7 +445,7 @@ export default function InboxPage() {
                             onResolve={handleResolve}
                             onReopen={handleReopen}
                             onResumeAutomation={handleResumeAutomation}
-                            businessSlug={businessSlug}
+                            businessSlug={businessSlug ?? undefined}
                             onSendBookingLink={handleSendBookingLink}
                             onNewConversation={() => setNewConversationDialog(true)}
                         />

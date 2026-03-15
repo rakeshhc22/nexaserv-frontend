@@ -472,7 +472,7 @@ export default function PublicFormPage() {
                                 )}
 
                                 {/* Radio */}
-                                {field.type === 'radio' && (
+                                {(field.type as string) === 'radio' && (
                                     <FormControl component="fieldset">
                                         <Typography sx={labelSx}>
                                             {field.label}

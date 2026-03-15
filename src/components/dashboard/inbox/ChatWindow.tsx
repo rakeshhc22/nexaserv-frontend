@@ -3,7 +3,7 @@
 import {
     Box, Paper, Typography, TextField, IconButton, Avatar, CircularProgress,
     Button, Chip, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions,
-    List, ListItem, ListItemButton, ListItemText,
+    List, ListItem, ListItemButton, ListItemText, Drawer
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import AttachmentIcon from '@mui/icons-material/Attachment';
@@ -18,6 +18,7 @@ import { useState, useRef, useEffect } from 'react';
 import ContactDetails from './ContactDetails';
 import api from '@/lib/api';
 import { useTheme } from '@mui/material/styles';
+
 
 interface ChatWindowProps {
     conversation: Conversation | null;
@@ -299,10 +300,10 @@ export default function ChatWindow({
                             >
                                 <Typography variant="caption" sx={{ color: textMuted, px: 1, fontSize: '0.65rem' }}>
                                     {isOutbound
-                                        ? (msg.automated ? 'Sent by AI' : 'You')
+                                        ? ((msg as any).automated ? 'Sent by AI' : 'You')
                                         : conversation.contactId?.name}
                                     {' • '}
-                                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    {new Date(msg.sentAt || (msg as any).createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </Typography>
 
                                 {/* ── Message bubble ── */}
@@ -311,7 +312,7 @@ export default function ChatWindow({
                                     maxWidth: '75%', p: 1.5,
                                     ...(isOutbound
                                         ? {
-                                            background: msg.automated
+                                            background: (msg as any).automated
                                                 ? 'linear-gradient(135deg, rgba(0,200,255,0.25), rgba(100,80,255,0.25))'
                                                 : 'linear-gradient(135deg, #00C8FF, #6450FF)',
                                             color: '#fff',
@@ -332,9 +333,9 @@ export default function ChatWindow({
                                         {msg.content}
                                     </Typography>
 
-                                    {msg.attachments && msg.attachments.length > 0 && (
+                                    {(msg as any).attachments && (msg as any).attachments.length > 0 && (
                                         <Box mt={1} display="flex" gap={1} flexWrap="wrap">
-                                            {msg.attachments.map((url: string, i: number) => (
+                                            {(msg as any).attachments.map((url: string, i: number) => (
                                                 <Button
                                                     key={i}
                                                     component="a"
@@ -359,7 +360,7 @@ export default function ChatWindow({
                                     )}
                                 </Box>
 
-                                {isOutbound && msg.channel === 'gmail' && (
+                                {isOutbound && (msg as any).channel === 'gmail' && (
                                     <Typography variant="caption" sx={{ color: 'rgba(0,200,255,0.5)', fontSize: '0.6rem', pr: 1 }}>
                                         Sent via Gmail
                                     </Typography>
@@ -496,11 +497,29 @@ export default function ChatWindow({
             </Box>
 
             {/* ── Contact details drawer ── */}
-            <ContactDetails
-                contact={conversation.contactId}
+            <Drawer
+                anchor="right"
                 open={showContactDetails}
                 onClose={() => setShowContactDetails(false)}
-            />
+                PaperProps={{
+                    sx: { width: { xs: '100%', sm: 400 }, bgcolor: 'background.default' }
+                }}
+            >
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
+                    <IconButton onClick={() => setShowContactDetails(false)}>
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
+                <Box sx={{ p: 2 }}>
+                    <ContactDetails
+                        conversation={conversation}
+                        businessSlug={businessSlug || null}
+                        onResolve={onResolve}
+                        onReopen={onReopen}
+                        onSendBookingLink={onSendBookingLink || (() => {})}
+                    />
+                </Box>
+            </Drawer>
 
             {/* ── Forms dialog ── */}
             <Dialog

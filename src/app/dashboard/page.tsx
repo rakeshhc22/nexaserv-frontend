@@ -190,7 +190,7 @@ export default function DashboardPage() {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         return leads.filter(l => {
-            const d = new Date(l.createdAt || l.date || 0);
+            const d = new Date(l.createdAt ?? 0);
             return d >= today;
         }).length;
     }, [leads]);
